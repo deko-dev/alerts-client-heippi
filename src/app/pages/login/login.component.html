@@ -1,0 +1,35 @@
+<div class="back-login">
+    <div class="image-login">
+        <img src="assets/images/back-login.png" alt="">
+    </div>
+
+    <div class="form">
+        <form [formGroup]="userForm" (ngSubmit)="onSubmit( $event )">
+            <img class="logo-login" src="assets/images/profile-user 1.png" alt="">
+
+            <div class="input input-name">
+                <label for="name">Nombre</label>
+                <input 
+                    id="name"
+                    name="name"
+                    type="text"
+                    formControlName="name"
+                >
+            </div>
+
+            <div class="input input-nickname">
+                <label for="nickname">nickname</label>
+                <input 
+                    id="nickname"
+                    name="nickname"
+                    type="text"
+                    formControlName="nickname"
+                >
+            </div>
+
+            <button [disabled]="userForm.invalid" class="btn-submit" type="submit">Ingresar</button>
+
+        </form>
+    </div>
+
+</div>
