@@ -1,6 +1,11 @@
-<div class="input-group mb-3">
+<div class="input-group mb-3" *ngIf="!dataInCookie">
     <span class="input-group-text" id="basic-addon1">@</span>
     <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" [(ngModel)]="name">
 </div>
 
-<button type="button" class="btn btn-primary" (click)="register()">Send</button>
+<button type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
+
+
+<div class="alert alert-success" role="alert" *ngIf="dataInCookie">
+    <strong>Codigo Registrado {{this.code}}</strong>
+</div>
