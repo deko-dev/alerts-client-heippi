@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RegisterCodeComponent } from './register-code.component';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 const registerCodeRoutes: Routes = [
   {
@@ -18,7 +20,9 @@ const registerCodeRoutes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(registerCodeRoutes),
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    ServiceWorkerModule
   ]
 })
 export class RegisterCodeModule { }
