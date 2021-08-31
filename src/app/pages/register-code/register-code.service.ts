@@ -27,7 +27,7 @@ export class RegisterCodeService extends Socket {
     console.log('Registrando Codigo');
     
     this.ioSocket.emit('default', {
-        cookiePayload:this.cookieService.get('device'),
+        cookiePayload:localStorage.getItem('device'),
         event: "register-code",
         payload
     });

@@ -14,6 +14,9 @@ export class RegisterCodeComponent implements OnInit {
   name: string= '';
   code: string = '';
 
+  isAlert: boolean = false;
+  textAlert: string = '';
+
   public dataInCookie: boolean = false;
 
   constructor(
@@ -25,16 +28,24 @@ export class RegisterCodeComponent implements OnInit {
     this.registerCodeService.alertOut.subscribe(
       (res) => {
         console.log(res);
-        window.navigator.vibrate(3000);
-
+        if(!res.id_client){
+          window.navigator.vibrate(3000);
+          this.isAlert = true;
+          this.textAlert = 'Notificado!!!'
+        }
       }
     )
   }
 
   ngOnInit(): void {
-    if(this.cookieService.get('device')){
-      this.registerCodeService.registerCode( JSON.parse(this.cookieService.get('device')) );
-      this.code = JSON.parse(this.cookieService.get('device')).code;
+    if(localStorage.getItem('device')){
+      const device: any = localStorage.getItem('device');
+      if(JSON.parse(device).code === this.code){
+        this.code = JSON.parse(device).code;
+      } else {
+        JSON.parse(device).code = this.code;
+      }
+      this.registerCodeService.registerCode( JSON.parse(device) );
       this.dataInCookie = true;
     }
   }
@@ -47,7 +58,7 @@ export class RegisterCodeComponent implements OnInit {
         code: this.code
       }
     );
-    this.cookieService.set('device',JSON.stringify( 
+    localStorage.setItem('device', JSON.stringify( 
       {
         name: this.name,
         code: this.code
