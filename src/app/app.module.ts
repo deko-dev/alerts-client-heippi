@@ -11,7 +11,7 @@ const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'login'
+    redirectTo: 'main-users'
   },
   {
     path: 'chat',
@@ -20,6 +20,14 @@ const appRoutes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'main-users',
+    loadChildren: () => import('./pages/main-users/main-users.module').then(m => m.MainUsersModule)
+  },
+  {
+    path: 'register-code',
+    loadChildren: () => import('./pages/register-code/register-code.module').then(m => m.RegisterCodeModule)
   },
 ]
 

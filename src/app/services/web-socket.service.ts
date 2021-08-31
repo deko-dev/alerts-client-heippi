@@ -10,6 +10,7 @@ import { environment } from '../../environments/environment';
 export class WebSocketService extends Socket {
 
   @Output() outEvent: EventEmitter<any> = new EventEmitter();
+  @Output() devicesOut: EventEmitter<any> = new EventEmitter();
 
   
   constructor(
@@ -25,13 +26,9 @@ export class WebSocketService extends Socket {
       }
     });
 
-    console.log('Send');
-    this.ioSocket.on('message', (res: any) => {
-      console.log(res);
-      this.outEvent.emit(res);
-    });
-    this.ioSocket.on('messages', (res: any) => {
-      this.outEvent.emit(res);
+    this.ioSocket.on('response', (res: any) => {
+      console.log('Send Devices');
+      this.devicesOut.emit(res);
     });
   }
 
@@ -56,6 +53,16 @@ export class WebSocketService extends Socket {
     });
   }
 
+  alert() {
+    console.log('Emitiendo');
+    
+    this.ioSocket.emit('default', {
+        event: 'alert',
+        payload: 'OK2Ws6QFnqW7UstgAAAC'
+        // payload: 'jybIuakSX-Dz6kjjAAAF'
+    });
+  }
+
   sendMessage( payload: {}) {
     this.ioSocket.emit('default', {
       cookiePayload:this.cookieService.get('user'),
@@ -68,6 +75,19 @@ export class WebSocketService extends Socket {
     this.ioSocket.emit('default', {
       cookiePayload:this.cookieService.get('user'),
       event: 'messages',
+    });
+  }
+  getSockets() {
+    console.log('sockets')
+    this.ioSocket.emit('default', {
+      event: 'devices',
+    });
+  }
+
+  sendAlert( deviceId: string) {
+    this.ioSocket.emit('default', {
+      event: 'alert',
+      payload: deviceId
     });
   }
 
