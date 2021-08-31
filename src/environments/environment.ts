@@ -4,7 +4,8 @@
 
 export const environment = {
   production: false,
-  serverSocket: 'http://192.168.1.8:3000'
+  // serverSocket: 'http://192.168.1.8:3000'
+  serverSocket: 'https://alerts-heippi.herokuapp.com/'
 };
 
 /*

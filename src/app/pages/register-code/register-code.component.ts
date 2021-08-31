@@ -24,7 +24,9 @@ export class RegisterCodeComponent implements OnInit {
     this.code = this.activatedRoute.snapshot.params.code; 
     this.registerCodeService.alertOut.subscribe(
       (res) => {
+        console.log(res);
         window.navigator.vibrate(3000);
+
       }
     )
   }
@@ -39,12 +41,18 @@ export class RegisterCodeComponent implements OnInit {
 
 
   register(){
-    const device = {
-      name: this.name,
-      code: this.code
-    }
-    this.registerCodeService.registerCode({...device});
-    this.cookieService.set('device',JSON.stringify(device));
+    this.registerCodeService.registerCode(
+      {
+        name: this.name,
+        code: this.code
+      }
+    );
+    this.cookieService.set('device',JSON.stringify( 
+      {
+        name: this.name,
+        code: this.code
+      }
+    ))
     this.dataInCookie = true;
   }
 
