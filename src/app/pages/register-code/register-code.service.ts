@@ -29,7 +29,7 @@ export class RegisterCodeService extends Socket {
     this.ioSocket.on('alert', (res: any) => {
       this.alertOut.emit(res);
     });
-    this.subscribedSW();
+    // this.subscribedSW();
   }
 
   registerCode(payload: {}) {
