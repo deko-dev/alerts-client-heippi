@@ -44,14 +44,11 @@ export class RegisterCodeComponent implements OnInit {
   async ngOnInit() {
 
     console.log('ngOnInit iniciado');
-
-    try {
-      const subscription = await this.swPush.subscription.toPromise();
-      console.log(subscription)
-    } catch (error) {
-      throw new Error(error);
-      
-    }
+    this.swPush.subscription.subscribe(
+      (response) => {
+        console.log(response);
+      }
+    )
 
 
 
