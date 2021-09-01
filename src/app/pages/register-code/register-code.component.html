@@ -5,7 +5,12 @@
 
 <button [disabled]="!isPermission" type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
 
-<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">Activar Notificaciones</button>
+<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">
+    <div class="spinner-border" role="status" *ngIf='isLoading'>
+        <span class="visually-hidden">Loading...</span>
+    </div>
+    Activar Notificaciones
+</button>
 
 <div class="alert alert-success" role="alert" *ngIf="dataInCookie">
     <strong>Codigo Registrado {{this.code}}</strong>
@@ -14,3 +19,7 @@
 <div class="alert alert-success" role="alert" *ngIf="isAlert">
     <strong>{{this.textAlert}}</strong>
 </div>
+
+<pre>
+    {{pushSubscription}}
+</pre>

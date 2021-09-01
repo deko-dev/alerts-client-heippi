@@ -22,6 +22,7 @@ export class RegisterCodeComponent implements OnInit {
 
   isPermission: boolean = false;
 
+  isLoading: boolean = false;
 
   public readonly VAPID_PUBLIC_KEY = 'BLpWrYjfdkphUVTEOlTjKg3InCo99o2-5cvLqiPZ83I6H0Djac-gvXW6AkKrQzXTxp0MEnZUa4GijosGoiKQYJc'
 
@@ -33,6 +34,8 @@ export class RegisterCodeComponent implements OnInit {
     private cookieService: CookieService,
     private swPush: SwPush
   ) {
+    console.log(Notification.permission);
+    this.subscribePushNotification();
     this.code = this.activatedRoute.snapshot.params.code; 
     this.registerCodeService.alertOut.subscribe(
       (res) => {
@@ -46,9 +49,7 @@ export class RegisterCodeComponent implements OnInit {
     )
   }
 
-  ngOnInit() {
-    this.subscribePushNotification;
-    
+  ngOnInit() {    
     if(this.cookieService.get('device')){
       const device = JSON.parse(this.cookieService.get('device'));
       if(this.code !== device.code){
@@ -83,9 +84,11 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   subscribePushNotification() {
+    this.isLoading = true;
     this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
       .then(
         (response) => {
+          this.isLoading = false;
           this.pushSubscription = response;
         }
       )
