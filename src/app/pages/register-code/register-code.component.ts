@@ -43,12 +43,22 @@ export class RegisterCodeComponent implements OnInit {
 
   async ngOnInit() {
 
-    const subscription = await  this.swPush.subscription.toPromise();
-
-    console.log(subscription);
+    console.log('ngOnInit iniciado');
 
     try {
-      const response = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+      const subscription = await this.swPush.subscription.toPromise();
+      console.log(subscription)
+    } catch (error) {
+      throw new Error(error);
+      
+    }
+
+
+
+    let response;
+
+    try {
+      response = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
       console.log(response);
     } catch (error) {
       throw new Error(error);
@@ -63,7 +73,7 @@ export class RegisterCodeComponent implements OnInit {
 
       const dataSend = {
         ...device,
-
+        ...response
       }
 
 
