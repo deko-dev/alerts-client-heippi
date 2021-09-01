@@ -36,6 +36,13 @@ export class RegisterCodeComponent implements OnInit {
   ) {
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
+    } else {
+      this.swPush.subscription.subscribe(
+        (response) => {
+          console.log(response);
+          this.pushSubscription = response;
+        }
+      )
     }
     this.code = this.activatedRoute.snapshot.params.code; 
     this.registerCodeService.alertOut.subscribe(
