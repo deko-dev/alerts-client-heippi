@@ -78,18 +78,19 @@ export class RegisterCodeComponent implements OnInit {
 
 
   register(){
-    this.registerCodeService.registerCode(
-      {
-        code: this.code,
-        pushSubscription: this.pushSubscription
-      }
-    );
-    this.cookieService.set('device',JSON.stringify( 
-      {
-        code: this.code
-      }
-    ))
-    this.dataInCookie = true;
+    console.log(this.pushSubscription);
+    // this.registerCodeService.registerCode(
+    //   {
+    //     code: this.code,
+    //     pushSubscription: this.pushSubscription
+    //   }
+    // );
+    // this.cookieService.set('device',JSON.stringify( 
+    //   {
+    //     code: this.code
+    //   }
+    // ))
+    // this.dataInCookie = true;
   }
 
   subscribePushNotification() {
