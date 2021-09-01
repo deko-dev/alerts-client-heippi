@@ -27,7 +27,6 @@ export class RegisterCodeService extends Socket {
     this.ioSocket.on('alert', (res: any) => {
       this.alertOut.emit(res);
     });
-    this.subscribedSW();
   }
 
   registerCode(payload: {}) {
@@ -38,17 +37,6 @@ export class RegisterCodeService extends Socket {
         event: "register-code",
         payload
     });
-  }
-
-
-  async subscribedSW() {
-    console.log('SubscribedSW');
-    const subs = await this.swPush.requestSubscription({ serverPublicKey: this.PUBLIC_VAPID_KEY })
-
-    this.http.post(
-      `https://localhost:3000/subscription`,
-      subs
-    )
   }
 
   addPushSubscriber(sub:any) {

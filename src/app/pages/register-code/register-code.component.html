@@ -3,8 +3,9 @@
     <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" [(ngModel)]="name">
 </div>
 
-<button type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
+<button [disabled]="!isPermission" type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
 
+<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">Activar Notificaciones</button>
 
 <div class="alert alert-success" role="alert" *ngIf="dataInCookie">
     <strong>Codigo Registrado {{this.code}}</strong>

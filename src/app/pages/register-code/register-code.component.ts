@@ -18,6 +18,11 @@ export class RegisterCodeComponent implements OnInit {
   isAlert: boolean = false;
   textAlert: string = '';
 
+  pushSubscription: any = {};
+
+  isPermission: boolean = false;
+
+
   public readonly VAPID_PUBLIC_KEY = 'BLpWrYjfdkphUVTEOlTjKg3InCo99o2-5cvLqiPZ83I6H0Djac-gvXW6AkKrQzXTxp0MEnZUa4GijosGoiKQYJc'
 
   public dataInCookie: boolean = false;
@@ -42,25 +47,7 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   async ngOnInit() {
-
-    console.log('ngOnInit iniciado');
-    this.swPush.subscription.subscribe(
-      (response) => {
-        console.log(response);
-      }
-    )
-
-
-
-    let response;
-
-    try {
-      response = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
-      console.log(response);
-    } catch (error) {
-      throw new Error(error);
-      
-    }
+    this.subscribePushNotification;
     
     if(this.cookieService.get('device')){
       const device = JSON.parse(this.cookieService.get('device'));
@@ -70,7 +57,7 @@ export class RegisterCodeComponent implements OnInit {
 
       const dataSend = {
         ...device,
-        ...response
+        ...this.pushSubscription
       }
 
 
@@ -83,17 +70,26 @@ export class RegisterCodeComponent implements OnInit {
   register(){
     this.registerCodeService.registerCode(
       {
-        name: this.name,
-        code: this.code
+        code: this.code,
+        ...this.pushSubscription
       }
     );
     this.cookieService.set('device',JSON.stringify( 
       {
-        name: this.name,
         code: this.code
       }
     ))
     this.dataInCookie = true;
+  }
+
+  async subscribePushNotification() {
+    try {
+      this.pushSubscription = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+      this.isPermission = true;
+      console.log(this.pushSubscription);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
 }
