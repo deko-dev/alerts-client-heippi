@@ -46,8 +46,8 @@ export class RegisterCodeComponent implements OnInit {
     )
   }
 
-  async ngOnInit() {
-    await this.subscribePushNotification;
+  ngOnInit() {
+    this.subscribePushNotification;
     
     if(this.cookieService.get('device')){
       const device = JSON.parse(this.cookieService.get('device'));
@@ -82,14 +82,13 @@ export class RegisterCodeComponent implements OnInit {
     this.dataInCookie = true;
   }
 
-  async subscribePushNotification(): Promise<void> {
-    try {
-      this.pushSubscription = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
-      this.isPermission = true;
-      console.log(this.pushSubscription);
-    } catch (error) {
-      console.log(error);
-    }
+  subscribePushNotification() {
+    this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+      .then(
+        (response) => {
+          this.pushSubscription = response;
+        }
+      )
   }
 
 }
