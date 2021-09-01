@@ -85,21 +85,16 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   subscribePushNotification() {
-    Notification.requestPermission().then( console.log );
-    // this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
-    //   .then(
-    //     (response) => {
-    //       this.isLoading = false;
-    //       this.pushSubscription = response;
-    //       this.isPermission = true;
-    //     }
-    //   ).catch( console.log );
+    this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+      .then(
+        (response) => {
+          this.pushSubscription = response;
+          this.isPermission = true;
+        }
+      ).catch( console.log );
   }
 
   request(){
-    if(Notification.permission === 'default'){
-      Notification.requestPermission().then( console.log );
-    }
   }
 
 }

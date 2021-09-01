@@ -5,10 +5,7 @@
 
 <button [disabled]="!isPermission" type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
 
-<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="request()">
-    <div class="spinner-border" role="status" *ngIf='isLoading'>
-        <span class="visually-hidden">Loading...</span>
-    </div>
+<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">
     Activar Notificaciones
 </button>
 
