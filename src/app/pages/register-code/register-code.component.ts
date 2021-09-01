@@ -35,7 +35,7 @@ export class RegisterCodeComponent implements OnInit {
     private swPush: SwPush
   ) {
     console.log(Notification.permission);
-    this.subscribePushNotification();
+    // this.subscribePushNotification();
     this.code = this.activatedRoute.snapshot.params.code; 
     this.registerCodeService.alertOut.subscribe(
       (res) => {
@@ -85,14 +85,16 @@ export class RegisterCodeComponent implements OnInit {
 
   subscribePushNotification() {
     this.isLoading = true;
-    this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
-      .then(
-        (response) => {
-          this.isLoading = false;
-          this.pushSubscription = response;
-          this.isPermission = true;
-        }
-      ).catch( console.log );
+    this.registerCodeService.subscribedSW();
+    this.pushSubscription = this.registerCodeService.pushSubscription
+    // this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+    //   .then(
+    //     (response) => {
+    //       this.isLoading = false;
+    //       this.pushSubscription = response;
+    //       this.isPermission = true;
+    //     }
+    //   ).catch( console.log );
   }
 
 }

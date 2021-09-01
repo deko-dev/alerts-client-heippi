@@ -14,6 +14,8 @@ export class RegisterCodeService extends Socket {
 
   public readonly PUBLIC_VAPID_KEY = 'BGi3yISPyUrS-F7r8k3umdtVZBJ5Ega3hV-APpz2A6muxS0z51wIo1t3r9dh2ZYgw8LDRI-E9yU4v11_Mxkmr-Y';
 
+  pushSubscription: any = {};
+
 
   constructor(
     private cookieService: CookieService,
@@ -27,6 +29,7 @@ export class RegisterCodeService extends Socket {
     this.ioSocket.on('alert', (res: any) => {
       this.alertOut.emit(res);
     });
+    this.subscribedSW();
   }
 
   registerCode(payload: {}) {
@@ -37,6 +40,13 @@ export class RegisterCodeService extends Socket {
         event: "register-code",
         payload
     });
+  }
+
+
+  async subscribedSW() {
+    console.log('SubscribedSW');
+    const subs = await this.swPush.requestSubscription({ serverPublicKey: this.PUBLIC_VAPID_KEY })
+    console.log(subs);
   }
 
   addPushSubscriber(sub:any) {
