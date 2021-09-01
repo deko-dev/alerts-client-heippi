@@ -90,8 +90,9 @@ export class RegisterCodeComponent implements OnInit {
         (response) => {
           this.isLoading = false;
           this.pushSubscription = response;
+          this.isPermission = true;
         }
-      )
+      ).catch( console.log );
   }
 
 }
