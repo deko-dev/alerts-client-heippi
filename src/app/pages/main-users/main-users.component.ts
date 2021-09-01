@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../../services/web-socket.service';
 import { CookieService } from 'ngx-cookie-service';
-import { SwPush } from '@angular/service-worker';
 
 @Component({
   selector: 'app-main-users',
@@ -16,12 +15,9 @@ export class MainUsersComponent implements OnInit {
 
   textAlert: string = '';
 
-  public readonly VAPID_PUBLIC_KEY = 'BLpWrYjfdkphUVTEOlTjKg3InCo99o2-5cvLqiPZ83I6H0Djac-gvXW6AkKrQzXTxp0MEnZUa4GijosGoiKQYJc'
-
   constructor(
     protected webSocketService: WebSocketService,
     private cookieService: CookieService,
-    private swPush: SwPush
   ) { 
     this.webSocketService.devicesOut.subscribe(
       (res) => {
@@ -31,16 +27,7 @@ export class MainUsersComponent implements OnInit {
     )
   }
 
-  async ngOnInit() {
-    try {
-      const response = await this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
-      console.log(response);
-    } catch (error) {
-      throw new Error(error);
-      
-    }
-
-
+  ngOnInit(): void {
     this.webSocketService.getSockets();
   }
 
