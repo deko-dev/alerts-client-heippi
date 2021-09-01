@@ -37,6 +37,7 @@ export class RegisterCodeComponent implements OnInit {
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
     } else {
+      console.log('Status REGISTER-CODE LINE40', Notification.permission);
       this.swPush.subscription.subscribe(
         (response) => {
           console.log(response);
