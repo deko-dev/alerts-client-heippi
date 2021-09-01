@@ -5,7 +5,7 @@
 
 <button [disabled]="!isPermission" type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
 
-<button *ngIf="!isPermission !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">
+<button *ngIf="!isPermission && !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">
     Activar Notificaciones
 </button>
 

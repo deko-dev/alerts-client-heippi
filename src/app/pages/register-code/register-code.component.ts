@@ -37,6 +37,7 @@ export class RegisterCodeComponent implements OnInit {
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
     } else {
+      this.isPermission = true;
       console.log('Status REGISTER-CODE LINE40', Notification.permission);
       this.swPush.subscription.subscribe(
         (response) => {
@@ -78,19 +79,18 @@ export class RegisterCodeComponent implements OnInit {
 
 
   register(){
-    console.log(this.pushSubscription);
-    // this.registerCodeService.registerCode(
-    //   {
-    //     code: this.code,
-    //     pushSubscription: this.pushSubscription
-    //   }
-    // );
-    // this.cookieService.set('device',JSON.stringify( 
-    //   {
-    //     code: this.code
-    //   }
-    // ))
-    // this.dataInCookie = true;
+    this.registerCodeService.registerCode(
+      {
+        code: this.code,
+        pushSubscription: this.pushSubscription
+      }
+    );
+    this.cookieService.set('device',JSON.stringify( 
+      {
+        code: this.code
+      }
+    ))
+    this.dataInCookie = true;
   }
 
   subscribePushNotification() {
