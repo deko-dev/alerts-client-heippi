@@ -84,10 +84,13 @@ export class WebSocketService extends Socket {
     });
   }
 
-  sendAlert( deviceId: string) {
+  sendAlert( device: any) {
     this.ioSocket.emit('default', {
       event: 'alert',
-      payload: deviceId
+      payload: {
+        id: device.id,
+        pushSubscription: device.pushSubscription
+      }
     });
   }
 

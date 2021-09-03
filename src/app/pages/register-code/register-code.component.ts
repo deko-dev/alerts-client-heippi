@@ -4,6 +4,7 @@ import { WebSocketService } from '../../services/web-socket.service';
 import { RegisterCodeService } from './register-code.service';
 import { CookieService } from 'ngx-cookie-service';
 import { SwPush } from '@angular/service-worker';
+import { environment } from '../../../environments/environment.prod';
 
 @Component({
   selector: 'app-register-code',
@@ -23,8 +24,6 @@ export class RegisterCodeComponent implements OnInit {
   isPermission: boolean = false;
 
   isLoading: boolean = false;
-
-  public readonly VAPID_PUBLIC_KEY = 'BLpWrYjfdkphUVTEOlTjKg3InCo99o2-5cvLqiPZ83I6H0Djac-gvXW6AkKrQzXTxp0MEnZUa4GijosGoiKQYJc'
 
   public dataInCookie: boolean = false;
 
@@ -94,7 +93,7 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   subscribePushNotification() {
-    this.swPush.requestSubscription({ serverPublicKey: this.VAPID_PUBLIC_KEY })
+    this.swPush.requestSubscription({ serverPublicKey: environment.vapidPublicKey })
       .then(
         (response) => {
           this.pushSubscription = response;

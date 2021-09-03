@@ -32,7 +32,7 @@ export class MainUsersComponent implements OnInit {
   }
 
   public generarUUID(){
-    return '_' + Math.random().toString(36).substr(2, 9);
+    return Math.random().toString().substr(3, 4);
   }
 
   public newDevie(){ 
@@ -42,10 +42,9 @@ export class MainUsersComponent implements OnInit {
     }, 2000);
   }
 
-  public alert(deviceId: string){
-    this.webSocketService.sendAlert(deviceId);
-    console.log(deviceId);
-    this.textAlert = `Alerta Enviada al Dispositivo con Id: ${deviceId}`;
+  public alert(device: any){
+    this.webSocketService.sendAlert(device);
+    this.textAlert = `Alerta Enviada al Dispositivo con Id: ${device.id}`;
   }
 
 }
