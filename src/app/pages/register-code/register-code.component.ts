@@ -45,7 +45,7 @@ export class RegisterCodeComponent implements OnInit {
       (res) => {
         console.log(res);
         if(!res.id_client){
-          window.navigator.vibrate(9999999999);
+          window.navigator.vibrate(99999999999999);
           this.isAlert = true;
         }
       }

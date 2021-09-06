@@ -9,6 +9,7 @@
         </div>
     </div> 
 
+    <span *ngIf="!isPermission" class="text-base text-red-600 font-medium">Debe aceptar las notificaciones</span>
 
     <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-36">
         <input 
@@ -20,7 +21,7 @@
             [(ngModel)]="codeDevice" 
             class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none"
         >
-        <button (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-primary font-medium text-lg" mat-raised-button>
+        <button [disabled]="!isPermission" (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-primary font-medium text-lg" mat-raised-button>
             Iniciar
             <mat-icon>send</mat-icon> 
         </button>
