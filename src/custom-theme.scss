@@ -1,0 +1,67 @@
+@use '../node_modules/@angular/material' as mat ;
+@use "sass:map";
+
+@include mat.core();
+
+// Gama de Colores
+
+$yohu-primary: (
+    50 : #ffe9e5,
+    100 : #ffc9bd,
+    200 : #ffa591,
+    300 : #ff8165,
+    400 : #ff6644,
+    500 : #ff4b23,
+    600 : #ff441f,
+    700 : #ff3b1a,
+    800 : #ff3315,
+    900 : #ff230c,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #000000,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+    )
+);
+
+$yohu-accent: (
+    50 : #e0edf4,
+    100 : #b3d3e3,
+    200 : #80b6d0,
+    300 : #4d99bd,
+    400 : #2683ae,
+    500 : #006da0,
+    600 : #006598,
+    700 : #005a8e,
+    800 : #005084,
+    900 : #003e73,
+    contrast: (
+        50 : #000000,
+        100 : #000000,
+        200 : #000000,
+        300 : #000000,
+        400 : #ffffff,
+        500 : #ffffff,
+        600 : #ffffff,
+        700 : #ffffff,
+        800 : #ffffff,
+        900 : #ffffff,
+    )
+);
+
+
+// Tema propio
+$yohu-theme: mat-light-theme((
+    color: (
+        primary: mat.get($yohu-primary, primary),
+        accent: mat.get($yohu-accent, accent),
+    )
+));
+
+// @include angular-material-theme($yohu-theme);

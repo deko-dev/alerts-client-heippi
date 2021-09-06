@@ -1,5 +1,39 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+$primary: #ff4b23;
+$accent: #006da0;
+
+
 body {
     background-color: #f5efef;
     width: 100%;
     min-height: 100vh;
+}
+
+.text-color-primary {
+    color: $primary;
+}
+
+.text-color-accent {
+    color: $accent;
+}
+
+.bg-color-primary {
+    background-color: $primary !important;
+    color: white !important;
+}
+
+.bg-color-accent {
+    background-color: $accent !important;
+    color: white !important;
+}
+
+.border-color-primary {
+    border-color: $primary !important;
+}
+
+.border-color-accent {
+    border-color: $accent !important;
 }

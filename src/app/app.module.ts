@@ -8,24 +8,21 @@ import { RouterModule, Routes } from '@angular/router';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+import { provideFirebaseApp, initializeApp } from "@angular/fire/app";
+import { provideFirestore,getFirestore } from "@angular/fire/firestore";
+import { SharedModule } from './shared/shared.module';
 
 
 const appRoutes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    redirectTo: 'main-users'
+    redirectTo: 'dashboard'
   },
   {
-    path: 'chat',
-    loadChildren: () => import('./pages/chat/chat.module').then(m => m.ChatModule)
-  },
-  {
-    path: 'login',
-    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
-  },
-  {
-    path: 'main-users',
+    path: 'dashboard',
     loadChildren: () => import('./pages/main-users/main-users.module').then(m => m.MainUsersModule)
   },
   {
@@ -45,11 +42,11 @@ const appRoutes: Routes = [
     RouterModule.forRoot(appRoutes),
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: true,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
       registrationStrategy: 'registerWhenStable:30000'
     }),
-    HttpClientModule
+    HttpClientModule,
+    BrowserAnimationsModule,
+    SharedModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

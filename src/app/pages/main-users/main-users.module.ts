@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { MainUsersComponent } from './main-users.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SocketIoModule } from 'ngx-socket-io';
+import { SharedModule } from '../../shared/shared.module';
+import { RegisterComponent } from './register/register.component';
+import { DevicesComponent } from './devices/devices.component';
 
 const mainUsersRoutes: Routes = [
   {
@@ -14,12 +17,15 @@ const mainUsersRoutes: Routes = [
 
 @NgModule({
   declarations: [
-    MainUsersComponent
+    MainUsersComponent,
+    RegisterComponent,
+    DevicesComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild(mainUsersRoutes),
     SocketIoModule,
+    SharedModule
   ]
 })
 export class MainUsersModule { }

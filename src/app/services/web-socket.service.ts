@@ -12,36 +12,29 @@ export class WebSocketService extends Socket {
   @Output() outEvent: EventEmitter<any> = new EventEmitter();
   @Output() devicesOut: EventEmitter<any> = new EventEmitter();
 
-  
+  nameRestaurant: string = '';
+
   constructor(
     private cookieService: CookieService
   ) {
-
     super({
       url: environment.serverSocket,
       options: {
         query: {
-          payload: cookieService.get('user')
+          payload: cookieService.get('restaurant')
         }
       }
     });
 
-    this.ioSocket.on('response', (res: any) => {
-      console.log('Send Devices');
+    
+    
+
+    this.ioSocket.on('devices:restaurant', (res: any) => {
       this.devicesOut.emit(res);
     });
+    this.getSockets();
   }
 
-
-  public hacerLogin (event: string,payload = {}) {
-    console.log('Emitiendo');
-    
-    this.ioSocket.emit('default', {
-        cookiePayload:this.cookieService.get('user'),
-        event,
-        payload
-    });
-  }
 
   login(event: string, payload = {}) {
     console.log('Emitiendo');
@@ -79,8 +72,10 @@ export class WebSocketService extends Socket {
   }
   getSockets() {
     console.log('sockets')
-    this.ioSocket.emit('default', {
-      event: 'devices',
+    const restaurant = JSON.parse(this.cookieService.get('restaurant'));
+    restaurant.name = restaurant.name.replaceAll(' ', '_').toLowerCase()
+    this.ioSocket.emit('devices:restaurant', {
+      ...restaurant
     });
   }
 
