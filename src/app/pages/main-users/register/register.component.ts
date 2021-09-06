@@ -55,6 +55,7 @@ export class RegisterComponent implements OnInit {
 
   public isDataLS(){
     this.restaurantSaved.emit(true);
+    this.registerLocal();
   }
 
 }
