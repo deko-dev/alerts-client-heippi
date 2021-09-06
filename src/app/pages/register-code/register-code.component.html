@@ -1,22 +1,54 @@
-<div class="input-group mb-3" *ngIf="!dataInCookie">
-    <span class="input-group-text" id="basic-addon1">@</span>
-    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" [(ngModel)]="name">
+<div class="min-h-screen w-full px-4 py-7 flex flex-col justify-start items-center gap-7" *ngIf="!dataInCookie">
+    <div class="w-7/12 text-center">
+        <span class="text-xl font-bold">Ingresar Código de Seguimiento</span>
+    </div>
+    
+    <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-primary flex flex-row justify-center items-center">
+            <mat-icon class="icon-img">notifications_active</mat-icon>
+        </div>
+    </div> 
+
+
+    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-36">
+        <input 
+            matInput 
+            minlength="5" 
+            maxlength="5" 
+            placeholder="Escriba su Código" 
+            type="number"
+            [(ngModel)]="codeDevice" 
+            class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none"
+        >
+        <button (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-primary font-medium text-lg" mat-raised-button>
+            Iniciar
+            <mat-icon>send</mat-icon> 
+        </button>
+    </div> 
 </div>
 
-<button [disabled]="!isPermission" type="button" class="btn btn-primary" (click)="register()" *ngIf="!dataInCookie">Send</button>
+<div class="min-h-screen w-full px-4 py-7 flex flex-col justify-start items-center gap-7" *ngIf="dataInCookie">
+    <div class="w-7/12 text-center">
+        <span class="text-5xl font-extrabold text-color-primary">Yohu !!!</span>
+    </div>
+    
+    <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-primary flex flex-row justify-center items-center">
+            <mat-icon class="icon-img">{{ isAlert ? 'done' : 'update'}}</mat-icon>
+        </div>
+    </div>
 
-<button *ngIf="!isPermission && !dataInCookie" type="button" class="btn btn-primary" (click)="subscribePushNotification()">
-    Activar Notificaciones
-</button>
+    <span class="font-bold text-lg" *ngIf="isAlert">Tu Pedido Está Listo</span>
 
-<div class="alert alert-success" role="alert" *ngIf="dataInCookie">
-    <strong>Codigo Registrado {{this.code}}</strong>
+
+    <span class="font-bold text-5xl">{{codeDevice}}</span>
+
+    <span class="font-bold text-xl" *ngIf="!isAlert">En preparión...</span>
+
+
+    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-20">
+        <button class="w-72 h-14 rounded-xl text-center border-color-primary text-color-primary font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert" (click)="stopVibrate()">
+            Voy en Camino
+        </button>
+    </div> 
 </div>
-
-<div class="alert alert-success" role="alert" *ngIf="isAlert">
-    <strong>{{this.textAlert}}</strong>
-</div>
-
-<pre>
-    {{pushSubscription | json}}
-</pre>

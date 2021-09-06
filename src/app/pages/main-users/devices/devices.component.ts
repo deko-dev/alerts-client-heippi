@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebSocketService } from '../../../services/web-socket.service';
 
 @Component({
@@ -12,10 +13,19 @@ export class DevicesComponent implements OnInit {
 
   constructor(
     protected webSocketService: WebSocketService,
+    private _snackBar: MatSnackBar
   ) { 
     this.webSocketService.devicesOut.subscribe(
       (res) => {
+        if(res.length > this.devices.length){
+          this._snackBar.open('Nuevo Dispositivo Vinculado!!', 'Cerrar' ,{
+            horizontalPosition: 'center',
+            verticalPosition: 'bottom',
+            duration: 3000
+          });
+        }
         this.devices = res;
+        
       }
     )
     this.getDevices();
@@ -33,10 +43,11 @@ export class DevicesComponent implements OnInit {
   }
 
   public newDevie(){ 
-    // this.isLoading = true;
-    setTimeout(() => {
-      // this.UUID = this.generarUUID(5);
-    }, 2000);
+    this._snackBar.open(this.generarUUID(5), 'Cerrar' ,{
+      horizontalPosition: 'center',
+      verticalPosition: 'bottom',
+      duration: 3000
+    });
   }
 
   public alert(device: any){

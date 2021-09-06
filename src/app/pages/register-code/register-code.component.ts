@@ -12,18 +12,15 @@ import { environment } from '../../../environments/environment.prod';
   styleUrls: ['./register-code.component.scss']
 })
 export class RegisterCodeComponent implements OnInit {
-
-  name: string= '';
-  code: string = '';
+  codeDevice: string = '';
 
   isAlert: boolean = false;
-  textAlert: string = '';
 
   pushSubscription: any = {};
 
   isPermission: boolean = false;
 
-  isLoading: boolean = false;
+  restaurantName: string | null = '';
 
   public dataInCookie: boolean = false;
 
@@ -33,26 +30,23 @@ export class RegisterCodeComponent implements OnInit {
     private cookieService: CookieService,
     private swPush: SwPush
   ) {
+    this.restaurantName = this.activatedRoute.snapshot.queryParamMap.get('restaurant');
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
     } else {
       this.isPermission = true;
-      console.log('Status REGISTER-CODE LINE40', Notification.permission);
       this.swPush.subscription.subscribe(
         (response) => {
-          console.log(response);
           this.pushSubscription = response;
         }
       )
     }
-    this.code = this.activatedRoute.snapshot.params.code; 
     this.registerCodeService.alertOut.subscribe(
       (res) => {
         console.log(res);
         if(!res.id_client){
-          window.navigator.vibrate(3000);
+          window.navigator.vibrate(9999999999);
           this.isAlert = true;
-          this.textAlert = 'Notificado!!!'
         }
       }
     )
@@ -61,16 +55,7 @@ export class RegisterCodeComponent implements OnInit {
   ngOnInit() {    
     if(this.cookieService.get('device')){
       const device = JSON.parse(this.cookieService.get('device'));
-      if(this.code !== device.code){
-        device.code = this.code;
-      }
-
-      const dataSend = {
-        ...device,
-        pushSubscription: this.pushSubscription
-      }
-
-
+      this.codeDevice = device.code;
       this.registerCodeService.registerCode( device );
       this.dataInCookie = true;
     }
@@ -80,13 +65,16 @@ export class RegisterCodeComponent implements OnInit {
   register(){
     this.registerCodeService.registerCode(
       {
-        code: this.code,
+        restaurantName: this.restaurantName, 
+        code: this.codeDevice,
         pushSubscription: this.pushSubscription
       }
     );
     this.cookieService.set('device',JSON.stringify( 
       {
-        code: this.code
+        restaurantName: this.restaurantName, 
+        code: this.codeDevice,
+        pushSubscription: this.pushSubscription
       }
     ))
     this.dataInCookie = true;
@@ -103,6 +91,13 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   request(){
+  }
+
+  stopVibrate(){
+    window.navigator.vibrate(0);
+    this.cookieService.delete('device');
+    this.dataInCookie = false;
+    this.codeDevice = '';
   }
 
 }

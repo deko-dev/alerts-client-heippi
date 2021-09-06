@@ -5,10 +5,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { SharedModule } from '../../shared/shared.module';
 
 const registerCodeRoutes: Routes = [
   {
-    path: ':code',
+    path: '',
     component: RegisterCodeComponent
   }
 ]
@@ -22,7 +23,8 @@ const registerCodeRoutes: Routes = [
     RouterModule.forChild(registerCodeRoutes),
     FormsModule,
     HttpClientModule,
-    ServiceWorkerModule
+    ServiceWorkerModule,
+    SharedModule
   ]
 })
 export class RegisterCodeModule { }

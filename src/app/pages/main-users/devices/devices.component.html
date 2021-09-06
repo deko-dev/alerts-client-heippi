@@ -1,7 +1,7 @@
 <div class="w-10/12 min-h-full flex flex-row justify-around items-start flex-wrap p-4 mx-auto">
     <mat-card *ngFor="let device of devices" class="flex-device mx-2 my-4 rounded-md p-4">
         <mat-card-header class="w-full flex flex-row justify-center items-center">
-            <mat-card-title>{{device.uniqueCode}}</mat-card-title>
+            <mat-card-title>{{device.code}}</mat-card-title>
         </mat-card-header>
         <mat-card-content class="w-full flex flex-row justify-center items-center">
             <span class="text-3xl font-bold text-color-primary">Order #{{ device.orderNumber }}</span>
