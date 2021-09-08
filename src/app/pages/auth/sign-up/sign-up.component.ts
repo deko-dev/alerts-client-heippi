@@ -100,7 +100,7 @@ export class SignUpComponent implements OnInit {
               }
             )
             this.isLoading = false;
-            this.router.navigateByUrl(`auth/code_access?restaurant=${restaurant.email}`);
+            this.router.navigateByUrl(`auth/code_access?email=${restaurant.email}`);
           }
         }
       )
