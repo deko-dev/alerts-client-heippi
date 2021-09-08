@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../main-users/dashboard.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-code-access',
@@ -18,7 +19,8 @@ export class CodeAccessComponent implements OnInit {
     private dashboardService: DashboardService,
     private aRoute: ActivatedRoute,
     private router: Router,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private cookieService: CookieService
   ) { 
     this.email = this.aRoute.snapshot.queryParams.email;
   }
@@ -53,6 +55,8 @@ export class CodeAccessComponent implements OnInit {
                 });
                 this.isLoading = false;
                 await this.dashboardService.updateCodeAccessUsed( {...restaurant} )
+                delete restaurant.codeAccess;
+               localStorage.setItem('restaurant', JSON.stringify(restaurant));
                 this.router.navigateByUrl('dashboard');
               } else {
                 this.snackOpen('Este codigo ya fué usado' )

@@ -1,11 +1,14 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainUsersComponent } from './main-users.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SocketIoModule } from 'ngx-socket-io';
 import { SharedModule } from '../../shared/shared.module';
-import { RegisterComponent } from './register/register.component';
 import { DevicesComponent } from './devices/devices.component';
+
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+registerLocaleData(localeEs, 'es');
 
 const mainUsersRoutes: Routes = [
   {
@@ -18,7 +21,6 @@ const mainUsersRoutes: Routes = [
 @NgModule({
   declarations: [
     MainUsersComponent,
-    RegisterComponent,
     DevicesComponent
   ],
   imports: [
@@ -26,6 +28,11 @@ const mainUsersRoutes: Routes = [
     RouterModule.forChild(mainUsersRoutes),
     SocketIoModule,
     SharedModule
+  ],
+  providers: [
+    {
+      provide: LOCALE_ID, useValue: 'es'
+    }
   ]
 })
 export class MainUsersModule { }

@@ -51,11 +51,24 @@ export class DashboardService {
     }   
   }
 
+  public async updateDataLocal( dataRestaurant: any ): Promise<any>{
+    console.log(dataRestaurant);
+    try {
+      await this.restaurantsCollection.doc(dataRestaurant.id).update(dataRestaurant);
+    } catch (error) {
+      console.log(error); 
+    }   
+  }
+
+  public createOrder(){
+
+  }
+
   public getDataLocal(nameLocal: any) {
     const id = nameLocal.replaceAll(' ', '_').toLowerCase();
-    const restaurantCollection = this.afs.collection<any>(id);
+    const restaurant = this.restaurantsCollection.doc(id);
 
-    return restaurantCollection.valueChanges();
+    return restaurant.get();
   }
 
   public getAllRestaurant(){

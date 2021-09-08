@@ -21,7 +21,7 @@ export class WebSocketService extends Socket {
       url: environment.serverSocket,
       options: {
         query: {
-          payload: cookieService.get('restaurant')
+          payload: localStorage.getItem('restaurant')
         }
       }
     });
@@ -40,7 +40,7 @@ export class WebSocketService extends Socket {
     console.log('Emitiendo');
     
     this.ioSocket.emit('default', {
-        cookiePayload:this.cookieService.get('user'),
+        cookiePayload: localStorage.getItem('restaurant'),
         event,
         payload
     });
@@ -58,7 +58,7 @@ export class WebSocketService extends Socket {
 
   sendMessage( payload: {}) {
     this.ioSocket.emit('default', {
-      cookiePayload:this.cookieService.get('user'),
+      cookiePayload: localStorage.getItem('restaurant'),
       event: 'message',
       payload
     });
@@ -66,13 +66,13 @@ export class WebSocketService extends Socket {
 
   getMessages() {
     this.ioSocket.emit('default', {
-      cookiePayload:this.cookieService.get('user'),
+      cookiePayload: localStorage.getItem('restaurant'),
       event: 'messages',
     });
   }
   getSockets() {
-    console.log('sockets')
-    const restaurant = JSON.parse(this.cookieService.get('restaurant'));
+    const dataLS: any = localStorage.getItem('restaurant');
+    const restaurant = JSON.parse(dataLS);
     restaurant.name = restaurant.name.replaceAll(' ', '_').toLowerCase()
     this.ioSocket.emit('devices:restaurant', {
       ...restaurant
@@ -82,10 +82,7 @@ export class WebSocketService extends Socket {
   sendAlert( device: any) {
     this.ioSocket.emit('default', {
       event: 'alert',
-      payload: {
-        id: device.id,
-        pushSubscription: device.pushSubscription
-      }
+      ...device
     });
   }
 

@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { WebSocketService } from '../../services/web-socket.service';
 import { RegisterCodeService } from './register-code.service';
-import { CookieService } from 'ngx-cookie-service';
 import { SwPush } from '@angular/service-worker';
 import { environment } from '../../../environments/environment.prod';
+import { DashboardService } from '../main-users/dashboard.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-register-code',
@@ -16,21 +15,20 @@ export class RegisterCodeComponent implements OnInit {
 
   isAlert: boolean = false;
 
+  isLoading: boolean = false;
+
   pushSubscription: any = {};
 
   isPermission: boolean = false;
 
-  restaurantName: string | null = '';
-
   public dataInCookie: boolean = false;
 
   constructor(
-    private activatedRoute: ActivatedRoute,
     private registerCodeService: RegisterCodeService,
-    private cookieService: CookieService,
-    private swPush: SwPush
+    private swPush: SwPush,
+    private dashboardService: DashboardService,
+    private _snackBar: MatSnackBar
   ) {
-    this.restaurantName = this.activatedRoute.snapshot.queryParamMap.get('restaurant');
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
     } else {
@@ -43,41 +41,73 @@ export class RegisterCodeComponent implements OnInit {
     }
     this.registerCodeService.alertOut.subscribe(
       (res) => {
-        console.log(res);
+        const audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
         if(!res.id_client){
-          window.navigator.vibrate(99999999999999);
+          window.navigator.vibrate(180000);
           this.isAlert = true;
+          localStorage.setItem('device', JSON.stringify(res));
+          audio.play();
         }
       }
     )
   }
 
   ngOnInit() {    
-    if(this.cookieService.get('device')){
-      const device = JSON.parse(this.cookieService.get('device'));
+    if(localStorage.getItem('device')){
+      console.log('hay device');
+      
+      const dataLS: any = localStorage.getItem('device');
+      const device = JSON.parse(dataLS);
       this.codeDevice = device.code;
       this.registerCodeService.registerCode( device );
       this.dataInCookie = true;
+      if( device.status === 'Listo y Avisado'){
+        window.navigator.vibrate(180000);
+        this.isAlert = true;
+      }
     }
   }
 
 
   register(){
-    this.registerCodeService.registerCode(
-      {
-        restaurantName: this.restaurantName, 
-        code: this.codeDevice,
-        pushSubscription: this.pushSubscription
-      }
-    );
-    this.cookieService.set('device',JSON.stringify( 
-      {
-        restaurantName: this.restaurantName, 
-        code: this.codeDevice,
-        pushSubscription: this.pushSubscription
-      }
-    ))
-    this.dataInCookie = true;
+    this.dashboardService.getAllRestaurant()
+      .subscribe(
+        async (response) => {  
+          const identifier = this.codeDevice.substr(0, 2);
+          const existeRestaurant = response.docs.filter( (doc) => doc.data().identifier === identifier );
+          if(existeRestaurant){
+            const devices = existeRestaurant[0].data().devices;
+            devices.forEach((device:any) => {
+                if(device.code === this.codeDevice){
+                  const payload = {
+                    idRestaurant: existeRestaurant[0].id, 
+                    code: this.codeDevice,
+                    pushSubscription: this.pushSubscription
+                  };
+                  this.registerCodeService.registerCode(payload);
+                  localStorage.setItem('device',JSON.stringify(payload))
+                  this.dataInCookie = true;
+                  this.snackOpen('Codigo Correcto!!');
+                  this.isLoading = false;
+                  return;
+                }
+            });
+
+            if(!this.dataInCookie){
+              this.snackOpen('Codigo No existe!!');
+              this.isLoading = false;
+              return;
+            }
+
+          }else {
+            this.snackOpen('Codigo invalido!!')
+            this.isLoading = false;
+            return;
+          }
+          
+
+        }
+      )
   }
 
   subscribePushNotification() {
@@ -94,10 +124,49 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   stopVibrate(){
-    window.navigator.vibrate(0);
-    this.cookieService.delete('device');
-    this.dataInCookie = false;
-    this.codeDevice = '';
+    this.dashboardService.getAllRestaurant()
+    .subscribe(
+      async (response) => {  
+        const identifier = this.codeDevice.substr(0, 2);
+        console.log(identifier);
+        const existeRestaurant = response.docs.filter( (doc) => doc.data().identifier === identifier );
+        console.log(existeRestaurant[0].data());
+        if(existeRestaurant){
+          const devices = existeRestaurant[0].data().devices;
+          devices.forEach(async (device:any, index: number) => {
+              if(device.code === this.codeDevice){
+                
+                existeRestaurant[0].data().devices[index].status = 'En Camino';
+                await this.dashboardService.updateDataLocal( { ...existeRestaurant[0].data() } )
+                const payload = {
+                  idRestaurant: existeRestaurant[0].id, 
+                  code: this.codeDevice,
+                  status: 'En camino'
+                };
+                this.registerCodeService.registerCode( payload );
+                window.navigator.vibrate(0);
+                localStorage.removeItem('device');
+                this.dataInCookie = false;
+                this.codeDevice = '';
+                this.isAlert = false;
+                return;
+              }
+          });
+        }
+        
+
+      }
+    )
   }
+
+  private snackOpen( msg: string ){
+    this._snackBar.open( msg, 'X',
+      {
+        horizontalPosition: 'right',
+        verticalPosition: 'bottom',
+      }
+    )
+  }
+
 
 }

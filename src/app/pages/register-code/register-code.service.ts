@@ -33,8 +33,6 @@ export class RegisterCodeService extends Socket {
   }
 
   registerCode(payload: {}) {
-    console.log('Registrando Codigo');
-    console.log(payload);
     this.ioSocket.emit('default', {
         event: "register-code",
         ...payload

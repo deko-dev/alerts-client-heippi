@@ -3,6 +3,7 @@ import { WebSocketService } from '../../services/web-socket.service';
 import { CookieService } from 'ngx-cookie-service';
 import { DashboardService } from './dashboard.service';
 import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-users',
@@ -11,14 +12,18 @@ import { Observable } from 'rxjs';
 })
 export class MainUsersComponent implements OnInit {
 
-  isLoading: boolean = false;
-  listDevices: any[] = [];
+  currentDate: Date = new Date();
   restaurantSaved: boolean = false;
-  nameLocal: string = '';
+
+  restaurantData: any = {};
 
   constructor(
-    private dashboardService: DashboardService
-  ) { }
+    private dashboardService: DashboardService,
+    private router: Router
+  ) { 
+    const dataLS: any = localStorage.getItem('restaurant')
+    this.restaurantData = JSON.parse(dataLS);
+  }
 
   ngOnInit(): void {}
 
@@ -26,4 +31,9 @@ export class MainUsersComponent implements OnInit {
     this.restaurantSaved = event;
   };
 
+
+  logout() {
+    localStorage.removeItem('restaurant');
+    this.router.navigateByUrl('auth/login');
+  }
 }

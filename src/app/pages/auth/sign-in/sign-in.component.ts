@@ -21,7 +21,6 @@ export class SignInComponent implements OnInit {
     private dashboardService: DashboardService,
     private _snackBar: MatSnackBar,
     private router: Router,
-    private cookieService: CookieService
   ) { 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
@@ -64,7 +63,6 @@ export class SignInComponent implements OnInit {
                 }
               )
               this.isLoading = false;
-              this.cookieService.set('restaurant', JSON.stringify(restaurant));
               this.router.navigateByUrl(`auth/code_access?email=${restaurant.email}`);
             }
 

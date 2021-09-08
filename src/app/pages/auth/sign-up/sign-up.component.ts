@@ -40,7 +40,7 @@ export class SignUpComponent implements OnInit {
     this.isLoading = true;
 
     const { nameRestaurant, email } = this.registerForm.getRawValue();
-    let restaurant = {};
+    let restaurant:any = {};
 
     this.dashboardService.getAllRestaurant()
       .subscribe(
@@ -100,7 +100,7 @@ export class SignUpComponent implements OnInit {
               }
             )
             this.isLoading = false;
-            this.router.navigateByUrl('dashboard');
+            this.router.navigateByUrl(`auth/code_access?restaurant=${restaurant.email}`);
           }
         }
       )

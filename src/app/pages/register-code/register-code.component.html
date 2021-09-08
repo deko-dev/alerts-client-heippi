@@ -4,27 +4,30 @@
     </div>
     
     <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
-        <div class="w-10/12 h-5/6 rounded-full bg-color-primary flex flex-row justify-center items-center">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-accent flex flex-row justify-center items-center">
             <mat-icon class="icon-img">notifications_active</mat-icon>
         </div>
     </div> 
 
     <span *ngIf="!isPermission" class="text-base text-red-600 font-medium">Debe aceptar las notificaciones</span>
 
-    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-36">
+    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-32">
         <input 
             matInput 
             minlength="5" 
             maxlength="5" 
             placeholder="Escriba su Código" 
-            type="number"
+            type="text"
             [(ngModel)]="codeDevice" 
             class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none"
         >
-        <button [disabled]="!isPermission" (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-primary font-medium text-lg" mat-raised-button>
+        <button *ngIf="!isLoading" [disabled]="!isPermission" (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-accent font-medium text-lg" mat-raised-button>
             Iniciar
             <mat-icon>send</mat-icon> 
         </button>
+
+        <mat-spinner class="mt-8 left-1/4" *ngIf="isLoading" [diameter]="25">
+        </mat-spinner>
     </div> 
 </div>
 
@@ -34,7 +37,7 @@
     </div>
     
     <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
-        <div class="w-10/12 h-5/6 rounded-full bg-color-primary flex flex-row justify-center items-center">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-accent flex flex-row justify-center items-center">
             <mat-icon class="icon-img">{{ isAlert ? 'done' : 'update'}}</mat-icon>
         </div>
     </div>
@@ -48,8 +51,10 @@
 
 
     <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-20">
-        <button class="w-72 h-14 rounded-xl text-center border-color-primary text-color-primary font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert" (click)="stopVibrate()">
+        <button class="w-72 h-14 rounded-xl text-center border-color-accent text-color-accent font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert" (click)="stopVibrate()">
             Voy en Camino
         </button>
     </div> 
 </div>
+
+<button id="click-false"></button>
