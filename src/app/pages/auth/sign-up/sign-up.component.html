@@ -1,0 +1,42 @@
+<mat-card class="w-10/12 mx-auto px-20 pt-8 pb-14 mt-12 rounded-lg">
+    <mat-card-content>
+        <img src="assets/images/LogoYohu.co_blue.png" alt="" class="w-5/12 mb-10">
+
+
+        <h2 class="text-3xl text-color-accent font-semibold">Registro</h2>
+        <span class="text-sm font-medium">Ya tienes cuenta? <a routerLink="../login" clasS="text-color-accent">Inicia sesión</a> </span>
+
+        <form class="flex flex-col justify-between items-center form-box mt-6 gap-4" [formGroup]="registerForm" (ngSubmit)="onSubmit($event)">
+
+            <div class="w-full flex flex-col justify-between items-start">
+                <label for="nameRestaurant" class="text-base text-gray-600 font-medium">Nombre del Restaurante</label>
+                <input
+                    type="text"
+                    class="w-full h-12 pl-2 text-gray-800 outline-none bg-white border-1 rounded-md border-color-accent"
+                    formControlName='nameRestaurant'
+                    name="nameRestaurant"
+                    id="nameRestaurant"
+                />
+            </div>
+
+            <div class="w-full flex flex-col justify-between items-start">
+                <label for="email" class="text-base text-gray-600 font-medium">Correo</label>
+                <input
+                    type="email"
+                    class="w-full h-12 pl-2 text-gray-800 outline-none bg-white border-1 rounded-md border-color-accent"
+                    formControlName='email'
+                    name="email"
+                    id="email"
+                />
+            </div>
+
+            <button *ngIf="!isLoading" [disabled]="registerForm.invalid" mat-raised-button class="border-color-accent rounded-full w-7/12 border-1 mt-8 h-10 border-solid text-color-accent">
+                Registrarse
+            </button>
+            
+            <mat-spinner class="mt-8 left-1/4" *ngIf="isLoading" [diameter]="50">
+            </mat-spinner>
+
+        </form>
+    </mat-card-content>
+</mat-card>

@@ -3,6 +3,4 @@
     <span class="example-spacer"></span>
 </mat-toolbar>
 
-<app-register (restaurantSaved)="restauranteSalvado($event)" *ngIf="!restaurantSaved"></app-register>
-
-<app-devices *ngIf="restaurantSaved"></app-devices>
+<app-devices></app-devices>

@@ -5,6 +5,7 @@ import { MaterialModules } from './material';
 import { environment } from '../../environments/environment.prod';
 import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 
 @NgModule({
     declarations: [],
@@ -14,7 +15,8 @@ import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
         ReactiveFormsModule,
         MaterialModules,
         AngularFireModule.initializeApp(environment.firebaseConfig),
-        AngularFirestoreModule
+        AngularFirestoreModule,
+        AngularFireAuthModule
     ],
     exports: [
         FormsModule,
