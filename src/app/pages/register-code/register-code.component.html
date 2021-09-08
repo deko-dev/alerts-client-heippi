@@ -26,14 +26,14 @@
             <mat-icon>send</mat-icon> 
         </button>
 
-        <mat-spinner class="mt-8 left-1/4" *ngIf="isLoading" [diameter]="25">
+        <mat-spinner class="mt-8" *ngIf="isLoading" [diameter]="50">
         </mat-spinner>
     </div> 
 </div>
 
 <div class="min-h-screen w-full px-4 py-7 flex flex-col justify-start items-center gap-7" *ngIf="dataInCookie">
     <div class="w-7/12 text-center">
-        <span class="text-5xl font-extrabold text-color-primary">Yohu !!!</span>
+        <img src="assets/images/LogoYohu.co_blue.png" alt="" class="w-full mb-10">
     </div>
     
     <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
@@ -42,12 +42,12 @@
         </div>
     </div>
 
-    <span class="font-bold text-lg" *ngIf="isAlert">Tu Pedido Está Listo</span>
+    <span class="font-bold text-lg text-green-400" *ngIf="isAlert">Tu Pedido Está Listo</span>
 
 
     <span class="font-bold text-5xl">{{codeDevice}}</span>
 
-    <span class="font-bold text-xl" *ngIf="!isAlert">En preparión...</span>
+    <span class="font-bold text-xl text-yellow-400" *ngIf="!isAlert">En preparación...</span>
 
 
     <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-20">

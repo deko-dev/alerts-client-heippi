@@ -70,6 +70,7 @@ export class RegisterCodeComponent implements OnInit {
 
 
   register(){
+    this.isLoading = true;
     this.dashboardService.getAllRestaurant()
       .subscribe(
         async (response) => {  

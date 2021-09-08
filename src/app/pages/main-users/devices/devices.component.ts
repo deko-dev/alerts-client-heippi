@@ -115,7 +115,10 @@ export class DevicesComponent implements OnInit {
           });
           await this.dashboardService.updateDataLocal( {...restaurant} )
           device.idRestaurant = response.id;
-          device.status === 'Sincronizado' && this.webSocketService.sendAlert(device);
+          device.status === 'Sincronizado' && this.webSocketService.sendAlert({
+            ...device,
+            status: 'Listo y Avisado'
+          });
         }
       )
   }
