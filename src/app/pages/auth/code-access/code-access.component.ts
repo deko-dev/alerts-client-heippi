@@ -41,28 +41,24 @@ export class CodeAccessComponent implements OnInit {
           const existsEmail = response.docs.filter( (doc) => doc.data().email === this.email );
           if(existsEmail.length){
             let restaurant = existsEmail[0].data();
-            const codeExiste = restaurant.codeAccess.find( 
-              (code: any) => code.codAccess == this.codeAccess.join('') );
-            
-            console.log(codeExiste);
-            if(codeExiste){
-              if(codeExiste.codAccess === restaurant.currentCodeAccess){
-                if(!codeExiste.is_used){
-                  restaurant.id = existsEmail[0].id;
-                  restaurant.codeAccess.forEach((cod: any) => {
-                      if(cod.codAccess === this.codeAccess.join('')){
-                        cod.is_used = true;
-                      }
-                  });
-                  this.isLoading = false;
-                  await this.dashboardService.updateCodeAccessUsed( {...restaurant} )
-                  this.router.navigateByUrl('dashboard');
-                } else {
-                  this.snackOpen('Este codigo ya fué usado' )
-                }
+            const lastCodeAccess = restaurant.codeAccess[ restaurant.codeAccess.length - 1];
+
+            if(lastCodeAccess.codAccess === this.codeAccess.join('')){
+              if(!lastCodeAccess.is_used){
+                restaurant.id = existsEmail[0].id;
+                restaurant.codeAccess.forEach((cod: any) => {
+                    if(cod.codAccess === this.codeAccess.join('')){
+                      cod.is_used = true;
+                    }
+                });
                 this.isLoading = false;
-                return;
+                await this.dashboardService.updateCodeAccessUsed( {...restaurant} )
+                this.router.navigateByUrl('dashboard');
+              } else {
+                this.snackOpen('Este codigo ya fué usado' )
               }
+              this.isLoading = false;
+              return;
             }else{
               this.snackOpen( 'Este Código no existe!!!' )
               this.isLoading = false;

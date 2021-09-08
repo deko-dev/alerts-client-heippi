@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { DashboardService } from '../../main-users/dashboard.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-sign-in',
@@ -19,7 +20,8 @@ export class SignInComponent implements OnInit {
     private fb: FormBuilder,
     private dashboardService: DashboardService,
     private _snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private cookieService: CookieService
   ) { 
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
@@ -51,7 +53,6 @@ export class SignInComponent implements OnInit {
             let restaurant = existsEmail[0].data();
             restaurant.id = existsEmail[0].id;
             restaurant.codeAccess.push(codAccess);
-            restaurant.currentCodeAccess = codAccess.codAccess;
             const responseMail = await this.dashboardService.loginRestaurant( {...restaurant} ); 
             if(responseMail){
               this._snackBar.open(
@@ -63,6 +64,7 @@ export class SignInComponent implements OnInit {
                 }
               )
               this.isLoading = false;
+              this.cookieService.set('restaurant', JSON.stringify(restaurant));
               this.router.navigateByUrl(`auth/code_access?email=${restaurant.email}`);
             }
 

@@ -87,7 +87,7 @@ export class SignUpComponent implements OnInit {
                 is_used: false
               }
             ],
-            currentCodeAccess: codAccess
+            devices: []
           }
           const responseMail = await this.dashboardService.createLocal( restaurant ); 
           if(responseMail){
@@ -100,7 +100,7 @@ export class SignUpComponent implements OnInit {
               }
             )
             this.isLoading = false;
-            this.router.navigateByUrl('auth/login');
+            this.router.navigateByUrl('dashboard');
           }
         }
       )
