@@ -56,7 +56,8 @@ export class CodeAccessComponent implements OnInit {
                 this.isLoading = false;
                 await this.dashboardService.updateCodeAccessUsed( {...restaurant} )
                 delete restaurant.codeAccess;
-               localStorage.setItem('restaurant', JSON.stringify(restaurant));
+                localStorage.setItem('restaurant', JSON.stringify(restaurant));
+                console.log(localStorage.getItem('restaurant'))
                 this.router.navigateByUrl('dashboard');
               } else {
                 this.snackOpen('Este codigo ya fué usado' )
