@@ -30,7 +30,6 @@ export class DevicesComponent implements OnInit {
             duration: 3000
           });
         }        
-        console.log(res);
         this.devices = res;
       }
     )
@@ -52,7 +51,6 @@ export class DevicesComponent implements OnInit {
     this.dashboardService.getDataLocal(this.restaurantData.name)
       .subscribe(
         async (response) => {
-          console.log('Line 55', response.data());
           const restaurant = response.data()
           let newDevice: any = {
             status: 'Sin sincronizar'
@@ -81,9 +79,7 @@ export class DevicesComponent implements OnInit {
             horizontalPosition: 'center',
             verticalPosition: 'bottom',
             duration: 3000
-          });
-          console.log(restaurant.devices);
-          
+          });          
           await this.dashboardService.updateDataLocal( {...restaurant} )
         }
       )
@@ -95,13 +91,12 @@ export class DevicesComponent implements OnInit {
       .subscribe(
         async (response) => {
           const restaurant = response.data()
-
           restaurant.devices.forEach(
             (deviceE:any, index: number) => {
               if(deviceE.code === device.code){
                 if(device.status === 'Sincronizado'){
                   deviceE.status = 'Listo y Avisado';
-                }else if(device.status === 'Listo y Avisado') {
+                }else if(device.status === 'En camino') {
                   restaurant.devices.splice(index, 1);
                 }
               }

@@ -23,6 +23,8 @@ export class RegisterCodeComponent implements OnInit {
 
   public dataInCookie: boolean = false;
 
+  audio = new Audio();
+
   constructor(
     private registerCodeService: RegisterCodeService,
     private swPush: SwPush,
@@ -41,12 +43,12 @@ export class RegisterCodeComponent implements OnInit {
     }
     this.registerCodeService.alertOut.subscribe(
       (res) => {
-        const audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
+        this.audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
         if(!res.id_client){
           window.navigator.vibrate(180000);
           this.isAlert = true;
           localStorage.setItem('device', JSON.stringify(res));
-          audio.play();
+          this.audio.play();
         }
       }
     )
@@ -146,6 +148,7 @@ export class RegisterCodeComponent implements OnInit {
                 };
                 this.registerCodeService.registerCode( payload );
                 window.navigator.vibrate(0);
+                this.audio.pause();
                 localStorage.removeItem('device');
                 this.dataInCookie = false;
                 this.codeDevice = '';
