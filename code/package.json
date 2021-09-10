@@ -5,6 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:dev": "node --max_old_space_size=3584 ./node_modules/@angular/cli/bin/ng build --source-map=false --aot --configuration=dev",
+    "build:prd": "node --max_old_space_size=3584 ./node_modules/@angular/cli/bin/ng build --source-map=false --aot --configuration=prd",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "start:dev": "ng serve -o --host=192.168.1.2 --port=4200 --disable-host-check"
