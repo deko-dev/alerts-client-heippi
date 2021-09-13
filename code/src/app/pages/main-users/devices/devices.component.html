@@ -5,7 +5,21 @@
     </button>
 </mat-card>
 
-<div class="w-10/12 min-h-full flex flex-row justify-around items-start flex-wrap p-4 mx-auto">
+<div class="w-10/12 min-h-full flex flex-row justify-center items-start flex-wrap p-4 mx-auto g-4">
+    <mat-card class="flex-device h-48 mx-2 my-4 rounded-md p-4 border-t-8 border-color-accent border-solid">
+        <mat-card-header class="w-full flex flex-row justify-center items-center">
+            <mat-card-title>Nuevo</mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="w-full flex flex-row justify-center items-center">
+            <span class="text-3xl font-bold text-color-accent">Nueva Orden</span>
+        </mat-card-content>
+        <mat-card-actions class="w-full flex flex-row justify-center items-center p-0 mx-0">
+            <button mat-icon-button (click)="newDevie()" class="bg-color-accent">
+                <mat-icon>add_alert</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+
     <mat-card 
         *ngFor="let device of devices" 
         class="flex-device h-48 mx-2 my-4 rounded-md p-4 border-t-8 border-solid"
@@ -37,19 +51,6 @@
                 <mat-icon>
                     {{ device.status.toLowerCase() === 'sincronizado' ? 'notifications_active' : 'done'}}
                 </mat-icon>
-            </button>
-        </mat-card-actions>
-    </mat-card>
-    <mat-card class="flex-device h-48 mx-2 my-4 rounded-md p-4 border-t-8 border-color-accent border-solid">
-        <mat-card-header class="w-full flex flex-row justify-center items-center">
-            <mat-card-title>Nuevo</mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="w-full flex flex-row justify-center items-center">
-            <span class="text-3xl font-bold text-color-accent">Nueva Orden</span>
-        </mat-card-content>
-        <mat-card-actions class="w-full flex flex-row justify-center items-center p-0 mx-0">
-            <button mat-icon-button (click)="newDevie()" class="bg-color-accent">
-                <mat-icon>add_alert</mat-icon>
             </button>
         </mat-card-actions>
     </mat-card>

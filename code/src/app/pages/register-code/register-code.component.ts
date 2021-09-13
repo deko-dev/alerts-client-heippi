@@ -31,16 +31,6 @@ export class RegisterCodeComponent implements OnInit {
     private dashboardService: DashboardService,
     private _snackBar: MatSnackBar
   ) {
-    if(Notification.permission === 'default'){
-      this.subscribePushNotification();
-    } else {
-      this.isPermission = true;
-      this.swPush.subscription.subscribe(
-        (response) => {
-          this.pushSubscription = response;
-        }
-      )
-    }
     this.registerCodeService.alertOut.subscribe(
       (res) => {
         this.audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
@@ -55,6 +45,17 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   ngOnInit() {    
+    if(Notification.permission === 'default'){
+      this.subscribePushNotification();
+    } else {
+      this.isPermission = true;
+      this.swPush.subscription.subscribe(
+        (response) => {
+          this.pushSubscription = response;
+        }
+      )
+    }
+      
     if(localStorage.getItem('device')){
       console.log('hay device');
       
@@ -79,7 +80,7 @@ export class RegisterCodeComponent implements OnInit {
         async (response) => {  
           const identifier = this.codeDevice.substr(0, 2);
           const existeRestaurant = response.docs.filter( (doc) => doc.data().identifier === identifier );
-          if(existeRestaurant){
+          if(existeRestaurant.length){
             const devices = existeRestaurant[0].data().devices;
             devices.forEach((device:any) => {
                 if(device.code === this.codeDevice){
@@ -101,6 +102,7 @@ export class RegisterCodeComponent implements OnInit {
                   this.isLoading = false;
                   return;
                 }else {
+                  console.log('No existe');
                   this.snackOpen('Codigo No existe o Ya fue usado!!');
                   this.isLoading = false;
                   return;
