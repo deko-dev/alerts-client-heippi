@@ -45,6 +45,9 @@ export class SignUpComponent implements OnInit {
     this.dashboardService.getAllRestaurant()
       .subscribe(
         async (response) => {  
+          const identifierArr = response.docs.map(
+            (doc) => doc.data().identifier
+          )
 
           const existsName = response.docs.filter( (doc) => doc.data().name === nameRestaurant );
           if(existsName.length){
@@ -79,7 +82,7 @@ export class SignUpComponent implements OnInit {
           restaurant = {
             name: nameRestaurant,
             email,
-            identifier: this.generarCodigo(response.docs),
+            identifier: this.generarCodigo(identifierArr.sort()),
             codeAccess: [
               {
                 codAccess,
@@ -115,9 +118,7 @@ export class SignUpComponent implements OnInit {
     }
 
 
-    const lastRestaurant = restaurants[ restaurants.length - 1 ].data();
-
-    const identifierLastRestaurant = lastRestaurant.identifier;
+    const identifierLastRestaurant = restaurants[ restaurants.length - 1 ];
 
     const letra1 = identifierLastRestaurant[0];
     const letra2 = identifierLastRestaurant[1];
@@ -128,6 +129,7 @@ export class SignUpComponent implements OnInit {
       identifierNew += letra1 + ARR_LETRAS[ARR_LETRAS.indexOf(letra2) + 1]
     }
 
+    console.log(identifierLastRestaurant)
     return identifierNew;
   }
 
