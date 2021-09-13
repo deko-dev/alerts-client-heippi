@@ -53,7 +53,8 @@ export class DevicesComponent implements OnInit {
         async (response) => {
           const restaurant = response.data()
           let newDevice: any = {
-            status: 'Sin sincronizar'
+            status: 'Sin sincronizar',
+            is_used: false
           }
           if(restaurant.devices.length === 0){
             newDevice.code = `${restaurant.identifier}001`;

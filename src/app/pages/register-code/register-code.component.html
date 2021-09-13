@@ -18,8 +18,8 @@
             maxlength="5" 
             placeholder="Escriba su Código" 
             type="text"
-            [(ngModel)]="codeDevice" 
-            class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none"
+            [(ngModel)]="codeDevice"
+            class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none uppercase"
         >
         <button *ngIf="!isLoading" [disabled]="!isPermission" (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-accent font-medium text-lg" mat-raised-button>
             Iniciar

@@ -73,6 +73,7 @@ export class RegisterCodeComponent implements OnInit {
 
   register(){
     this.isLoading = true;
+    this.codeDevice = this.codeDevice.toUpperCase();
     this.dashboardService.getAllRestaurant()
       .subscribe(
         async (response) => {  
@@ -82,10 +83,16 @@ export class RegisterCodeComponent implements OnInit {
             const devices = existeRestaurant[0].data().devices;
             devices.forEach((device:any) => {
                 if(device.code === this.codeDevice){
+                  if(device.is_used){
+                    this.snackOpen('Codigo Ya fué usado!!');
+                    this.isLoading = false;
+                    return;
+                  }
                   const payload = {
                     idRestaurant: existeRestaurant[0].id, 
                     code: this.codeDevice,
-                    pushSubscription: this.pushSubscription
+                    pushSubscription: this.pushSubscription,
+                    is_used: true
                   };
                   this.registerCodeService.registerCode(payload);
                   localStorage.setItem('device',JSON.stringify(payload))
@@ -93,15 +100,12 @@ export class RegisterCodeComponent implements OnInit {
                   this.snackOpen('Codigo Correcto!!');
                   this.isLoading = false;
                   return;
+                }else {
+                  this.snackOpen('Codigo No existe o Ya fue usado!!');
+                  this.isLoading = false;
+                  return;
                 }
             });
-
-            if(!this.dataInCookie){
-              this.snackOpen('Codigo No existe!!');
-              this.isLoading = false;
-              return;
-            }
-
           }else {
             this.snackOpen('Codigo invalido!!')
             this.isLoading = false;
@@ -144,7 +148,8 @@ export class RegisterCodeComponent implements OnInit {
                 const payload = {
                   idRestaurant: existeRestaurant[0].id, 
                   code: this.codeDevice,
-                  status: 'En camino'
+                  status: 'En camino',
+                  is_used: true
                 };
                 this.registerCodeService.registerCode( payload );
                 window.navigator.vibrate(0);
