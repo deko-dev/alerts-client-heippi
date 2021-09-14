@@ -51,7 +51,7 @@
 
 
     <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-20">
-        <button class="w-72 h-14 rounded-xl text-center border-color-accent text-color-accent font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert" (click)="stopVibrate()">
+        <button class="w-72 h-14 rounded-xl text-center border-color-accent text-color-accent font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert && noButton" (click)="stopVibrate()">
             Voy en Camino
         </button>
     </div> 

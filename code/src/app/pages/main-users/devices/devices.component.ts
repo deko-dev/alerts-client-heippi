@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { WebSocketService } from '../../../services/web-socket.service';
 import { DashboardService } from '../dashboard.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-devices',
@@ -14,41 +14,34 @@ export class DevicesComponent implements OnInit {
   restaurantData: any = {};
   codeNewOrder: string = '';
 
+  getDataLocalSubs: Subscription = new Subscription;
+
   constructor(
     protected webSocketService: WebSocketService,
-    private _snackBar: MatSnackBar,
     private dashboardService: DashboardService
   ) { 
     const dataLS: any = localStorage.getItem('restaurant')
     this.restaurantData = JSON.parse(dataLS);
     this.webSocketService.devicesOut.subscribe(
-      (res) => {
-        if(res.length > this.devices.length){
-          this._snackBar.open('Nuevo Dispositivo Vinculado!!', 'Cerrar' ,{
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000
-          });
-        }        
+      (res) => {       
         this.devices = res;
       }
     )
-    this.getDevices();
   }
 
   ngOnInit(): void {    
   }
 
-  getDevices(){
+  ngOnDestroy(): void {
+    this.getDataLocalSubs.unsubscribe();
   }
-  
-  
+
   public generarUUID(sizeUUID: number){
     return Math.random().toString().substr(3, sizeUUID);
   }
 
   public newDevie(){ 
-    this.dashboardService.getDataLocal(this.restaurantData.name)
+    this.getDataLocalSubs = this.dashboardService.getDataLocal(this.restaurantData.name)
       .subscribe(
         async (response) => {
           const restaurant = response.data()
@@ -75,19 +68,13 @@ export class DevicesComponent implements OnInit {
           this.codeNewOrder = newDevice.code;
 
           restaurant.devices.push(newDevice);
-          this.devices = restaurant.devices;
-          this._snackBar.open('Nuevo Dispositivo Vinculado!!', 'Cerrar' ,{
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000
-          });          
+          this.devices = restaurant.devices;         
           await this.dashboardService.updateDataLocal( {...restaurant} )
         }
       )
   }
 
   public alert(device: any){
-
     this.dashboardService.getDataLocal(this.restaurantData.name)
       .subscribe(
         async (response) => {
@@ -104,16 +91,11 @@ export class DevicesComponent implements OnInit {
             }
           )
           this.devices = restaurant.devices;
-          this._snackBar.open('Dispositivos actualizado!!', 'Cerrar' ,{
-            horizontalPosition: 'center',
-            verticalPosition: 'bottom',
-            duration: 3000
-          });
           await this.dashboardService.updateDataLocal( {...restaurant} )
           device.idRestaurant = response.id;
-          device.status === 'Sincronizado' && this.webSocketService.sendAlert({
+          (device.status === 'Sincronizado' || device.status === 'En camino') && this.webSocketService.sendAlert({
             ...device,
-            status: 'Listo y Avisado'
+            status: device.status === 'Sincronizado' ? 'Listo y Avisado' : 'Finalizado'
           });
         }
       )

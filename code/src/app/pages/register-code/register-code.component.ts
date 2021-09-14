@@ -1,16 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { RegisterCodeService } from './register-code.service';
 import { SwPush } from '@angular/service-worker';
 import { environment } from '../../../environments/environment.prd';
 import { DashboardService } from '../main-users/dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-register-code',
   templateUrl: './register-code.component.html',
   styleUrls: ['./register-code.component.scss']
 })
-export class RegisterCodeComponent implements OnInit {
+export class RegisterCodeComponent implements OnInit, AfterViewInit, OnDestroy {
   codeDevice: string = '';
 
   isAlert: boolean = false;
@@ -21,9 +23,13 @@ export class RegisterCodeComponent implements OnInit {
 
   isPermission: boolean = false;
 
+  noButton: boolean = false;
+
   public dataInCookie: boolean = false;
 
   audio = new Audio();
+
+  alertsOutSubs: Subscription = new Subscription;
 
   constructor(
     private registerCodeService: RegisterCodeService,
@@ -31,39 +37,26 @@ export class RegisterCodeComponent implements OnInit {
     private dashboardService: DashboardService,
     private _snackBar: MatSnackBar
   ) {
-    this.registerCodeService.alertOut.subscribe(
-      (res) => {
-        this.audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
-        if(!res.id_client){
-          window.navigator.vibrate(180000);
-          this.isAlert = true;
-          localStorage.setItem('device', JSON.stringify(res));
-          this.audio.play();
-        }
-      }
-    )
+    
   }
 
-  ngOnInit() {    
+  ngOnInit() { 
     if(Notification.permission === 'default'){
       this.subscribePushNotification();
     } else {
       this.isPermission = true;
-      this.swPush.subscription.subscribe(
-        (response) => {
+      this.swPush.subscription.subscribe((response) => {
           this.pushSubscription = response;
-        }
-      )
+      })
     }
       
     if(localStorage.getItem('device')){
-      console.log('hay device');
-      
       const dataLS: any = localStorage.getItem('device');
       const device = JSON.parse(dataLS);
       this.codeDevice = device.code;
       this.registerCodeService.registerCode( device );
       this.dataInCookie = true;
+      this.noButton = true;
       if( device.status === 'Listo y Avisado'){
         window.navigator.vibrate(180000);
         this.isAlert = true;
@@ -71,6 +64,31 @@ export class RegisterCodeComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.alertsOutSubs = this.registerCodeService.alertOut.subscribe(
+      (res) => {
+        this.audio = new Audio('assets/audios/charles_hei_yuhu.mp3');
+
+        if(res.status === 'Listo y Avisado'){
+          window.navigator.vibrate(180000);
+          this.isAlert = true;
+          localStorage.setItem('device', JSON.stringify(res));
+          this.audio.play();
+        }
+
+        if(res.status === 'Finalizado'){
+          this.dataInCookie = false;
+          this.codeDevice = '';
+          this.isAlert = false;
+          localStorage.removeItem('device');
+        }
+      }
+    )
+  }
+
+  ngOnDestroy(): void {
+    this.alertsOutSubs.unsubscribe();
+  }
 
   register(){
     this.isLoading = true;
@@ -98,8 +116,9 @@ export class RegisterCodeComponent implements OnInit {
                   this.registerCodeService.registerCode(payload);
                   localStorage.setItem('device',JSON.stringify(payload))
                   this.dataInCookie = true;
-                  this.snackOpen('Codigo Correcto!!');
+                  this.noButton = true;
                   this.isLoading = false;
+                  this.snackOpen('Codigo Correcto!!');
                   return;
                 }else {
                   console.log('No existe');
@@ -137,10 +156,8 @@ export class RegisterCodeComponent implements OnInit {
     .subscribe(
       async (response) => {  
         const identifier = this.codeDevice.substr(0, 2);
-        console.log(identifier);
         const existeRestaurant = response.docs.filter( (doc) => doc.data().identifier === identifier );
-        console.log(existeRestaurant[0].data());
-        if(existeRestaurant){
+        if(existeRestaurant.length){
           const devices = existeRestaurant[0].data().devices;
           devices.forEach(async (device:any, index: number) => {
               if(device.code === this.codeDevice){
@@ -156,10 +173,8 @@ export class RegisterCodeComponent implements OnInit {
                 this.registerCodeService.registerCode( payload );
                 window.navigator.vibrate(0);
                 this.audio.pause();
-                localStorage.removeItem('device');
-                this.dataInCookie = false;
-                this.codeDevice = '';
-                this.isAlert = false;
+                localStorage.setItem('device', JSON.stringify(payload));
+                this.noButton = false;
                 return;
               }
           });
@@ -175,6 +190,7 @@ export class RegisterCodeComponent implements OnInit {
       {
         horizontalPosition: 'right',
         verticalPosition: 'bottom',
+        duration: 3000
       }
     )
   }
