@@ -1,7 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { WebSocketService } from '../../../services/web-socket.service';
 import { DashboardService } from '../dashboard.service';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-devices',
@@ -13,8 +12,6 @@ export class DevicesComponent implements OnInit {
   devices: any[] = [];
   restaurantData: any = {};
   codeNewOrder: string = '';
-
-  getDataLocalSubs: Subscription = new Subscription;
 
   constructor(
     protected webSocketService: WebSocketService,
@@ -32,16 +29,12 @@ export class DevicesComponent implements OnInit {
   ngOnInit(): void {    
   }
 
-  ngOnDestroy(): void {
-    this.getDataLocalSubs.unsubscribe();
-  }
-
   public generarUUID(sizeUUID: number){
     return Math.random().toString().substr(3, sizeUUID);
   }
 
   public newDevie(){ 
-    this.getDataLocalSubs = this.dashboardService.getDataLocal(this.restaurantData.name)
+    this.dashboardService.getDataLocal(this.restaurantData.name)
       .subscribe(
         async (response) => {
           const restaurant = response.data()
@@ -54,7 +47,8 @@ export class DevicesComponent implements OnInit {
             newDevice.orderNumber = 1;
           } else {
             const lastDevice = restaurant.devices[ restaurant.devices.length - 1 ]
-            const lastCode = (parseInt(lastDevice.code.substr(2)) + 1).toString();
+            const lastCode = (lastDevice.orderNumber + 1).toString();
+            console.log('Line 58:', lastCode);
             if(lastCode.length === 1){
               newDevice.code = `${restaurant.identifier}00${lastCode}`;
             } else if(lastCode.length === 2){
@@ -63,10 +57,9 @@ export class DevicesComponent implements OnInit {
               newDevice.code = `${restaurant.identifier}${lastCode}`;
             }
 
-            newDevice.orderNumber = parseInt(lastDevice.orderNumber) + 1;
+            newDevice.orderNumber = parseInt(lastCode);
           }
           this.codeNewOrder = newDevice.code;
-
           restaurant.devices.push(newDevice);
           this.devices = restaurant.devices;         
           await this.dashboardService.updateDataLocal( {...restaurant} )

@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   // serverSocket: 'http://192.168.1.2:3000/',
-  serverSocket: 'https://alerts-heippi.herokuapp.com/',
+  serverSocket: 'https://api.dev.yohu.co/',
   vapidPublicKey: 'BLpWrYjfdkphUVTEOlTjKg3InCo99o2-5cvLqiPZ83I6H0Djac-gvXW6AkKrQzXTxp0MEnZUa4GijosGoiKQYJc',
   firebaseConfig: {
     apiKey: "AIzaSyCEwOLd6nEb6HKP8U00V9K8LxN5UEvtTho",
