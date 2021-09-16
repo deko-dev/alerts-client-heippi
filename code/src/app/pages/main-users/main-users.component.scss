@@ -1,0 +1,12 @@
+.card {
+    flex: 0 1 calc(25% - 10px);
+}
+
+button, .pointer {
+    cursor: pointer;
+}
+
+.nav-dashboard {
+    height: 80px;
+    // background: transparent;
+}

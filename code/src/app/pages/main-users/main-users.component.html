@@ -1,0 +1,19 @@
+<mat-toolbar class="nav-dashboard p-8">
+    <div class="block-1 w-10/12">
+        <img class="w-6/12 sm:w-2/12  md:w-2/12" src="assets/images/LogoYohu.co_blue.png/" alt="">
+        <span class="text-sm font-normal text-color-accent">{{ currentDate | date : 'fullDate'}}</span>
+    </div>
+
+    <div class="block-2 w-2/12 leading-none text-center mr-3">
+        <mat-icon class="text-color-accent">account_circle</mat-icon>
+        <h2 class="text-color-accent text-sm">{{restaurantData.name}}</h2>
+        <span class="text-xs font-normal text-color-accent">{{restaurantData.email}}</span>
+    </div>
+    
+    <button mat-button class="text-color-accent" (click)="logout()">
+        Cerrar sesión 
+        <mat-icon>logout</mat-icon>
+    </button>
+</mat-toolbar>
+
+<app-devices></app-devices>

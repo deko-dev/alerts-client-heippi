@@ -1,0 +1,60 @@
+<div class="min-h-screen w-full px-4 py-7 flex flex-col justify-start items-center gap-7" *ngIf="!dataInCookie">
+    <div class="w-7/12 text-center">
+        <span class="text-xl font-bold">Ingresar Código de Seguimiento</span>
+    </div>
+    
+    <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-accent flex flex-row justify-center items-center">
+            <mat-icon class="icon-img">notifications_active</mat-icon>
+        </div>
+    </div> 
+
+    <span *ngIf="!isPermission" class="text-base text-red-600 font-medium">Debe aceptar las notificaciones</span>
+
+    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-32">
+        <input 
+            matInput 
+            minlength="5" 
+            maxlength="5" 
+            placeholder="Escriba su Código" 
+            type="text"
+            [(ngModel)]="codeDevice"
+            class="w-72 h-14 rounded-xl text-center bg-white font-medium text-lg shadow-lg outline-none uppercase"
+        >
+        <button *ngIf="!isLoading" [disabled]="!isPermission" (click)="register()" class="w-72 h-14 rounded-xl text-center bg-color-accent font-medium text-lg" mat-raised-button>
+            Iniciar
+            <mat-icon>send</mat-icon> 
+        </button>
+
+        <mat-spinner class="mt-8" *ngIf="isLoading" [diameter]="50">
+        </mat-spinner>
+    </div> 
+</div>
+
+<div class="min-h-screen w-full px-4 py-7 flex flex-col justify-start items-center gap-7" *ngIf="dataInCookie">
+    <div class="w-7/12 text-center">
+        <img src="assets/images/LogoYohu.co_blue.png" alt="" class="w-full mb-10">
+    </div>
+    
+    <div class="w-32 h-32 flex flex-row justify-center items-center rounded-full shadow-bg">
+        <div class="w-10/12 h-5/6 rounded-full bg-color-accent flex flex-row justify-center items-center">
+            <mat-icon class="icon-img">{{ isAlert ? 'done' : 'update'}}</mat-icon>
+        </div>
+    </div>
+
+    <span class="font-bold text-lg text-green-400" *ngIf="isAlert">Tu Pedido Está Listo</span>
+
+
+    <span class="font-bold text-5xl">{{codeDevice}}</span>
+
+    <span class="font-bold text-xl text-yellow-400" *ngIf="!isAlert">En preparación...</span>
+
+
+    <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-20">
+        <button class="w-72 h-14 rounded-xl text-center border-color-accent text-color-accent font-medium text-lg border-2 border-solid" mat-raised-button *ngIf="isAlert && noButton" (click)="stopVibrate()">
+            Voy en Camino
+        </button>
+    </div> 
+</div>
+
+<button id="click-false"></button>

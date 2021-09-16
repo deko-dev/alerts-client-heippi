@@ -1,0 +1,102 @@
+# include:
+#   - template: Code-Quality.gitlab-ci.yml
+
+# code_quality:
+#   artifacts:
+#     paths: [gl-code-quality-report.json]
+#   tags:
+#    - builder
+
+stages:
+  - build
+  - deploy
+  - cleaner
+
+.dev_variables: &dev_variables
+  variables:
+    TAG_ENVIRONMENT: dev
+    TRAEFIK_FRONTEND_RULE_HOST: dev.yohu.co
+    TRAEFIK_DOCKER_NETWORK: traefik-public
+    TRAEFIK_CONSTRAINT_LABEL: traefik-public
+    STACK_NAME_DEPLOY: yohu_dev
+    MIN_REPLICAS: 1
+
+.prd_variables: &prd_variables
+  variables:
+    TAG_ENVIRONMENT: prd
+    TRAEFIK_FRONTEND_RULE_HOST: yohu.co
+    TRAEFIK_DOCKER_NETWORK: traefik-public
+    TRAEFIK_CONSTRAINT_LABEL: traefik-public
+    STACK_NAME_DEPLOY: yohu_prd
+    MIN_REPLICAS: 1
+
+.docker_build: &docker_build
+  script:
+    - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+    - docker build -t $CI_REGISTRY_IMAGE:$TAG_ENVIRONMENT-$CI_COMMIT_SHA -t $CI_REGISTRY_IMAGE:$TAG_ENVIRONMENT -f .gitlabci/Dockerfile ./ --build-arg ENVIRONMENT=$TAG_ENVIRONMENT
+    - docker push $CI_REGISTRY_IMAGE:$TAG_ENVIRONMENT-$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$TAG_ENVIRONMENT
+    - docker logout $CI_REGISTRY
+
+.deploy: &deploy
+  script:
+    - echo $TOKEN_REGISTRY_READ_HEIPPI | docker login -u $TOKEN_REGISTRY_READ_USER_HEIPPI --password-stdin $CI_REGISTRY
+    - envsubst < .gitlabci/deploy.yaml > .gitlabci/deploy_patched.yaml
+    - docker stack deploy -c .gitlabci/deploy_patched.yaml --with-registry-auth $STACK_NAME_DEPLOY
+    - docker logout $CI_REGISTRY
+
+.dev_branches: &dev_branches
+  only:
+    - develop
+    - /gitlabci\/.*/
+
+.prd_branches: &prd_branches
+  only:
+    - master
+
+docker_cleaner:
+  stage: cleaner
+  script:
+    - docker system df
+    - docker rm -f $(docker ps -a | grep "Dead\|Exited" | awk '{print $1}') || true
+    - docker rmi -f $(docker images | grep -w "<none>" | awk '{print $3}') || true
+    - docker rmi -f $(docker images -qf dangling=true) || true
+    - docker system df
+  tags:
+   - builder-docker
+
+dev_build:
+  stage: build
+  <<: *dev_variables
+  <<: *docker_build
+  <<: *dev_branches
+  tags:
+   - builder-docker
+dev_deploy:
+  stage: deploy
+  <<: *dev_variables
+  <<: *deploy
+  <<: *dev_branches
+  environment:
+    name: dev
+    url: https://dev.yohu.co/
+  tags:
+   - base-project
+
+prd_build:
+  stage: build
+  <<: *prd_variables
+  <<: *docker_build
+  <<: *prd_branches
+  tags:
+   - builder-docker
+prd_deploy:
+  stage: deploy
+  <<: *prd_variables
+  <<: *deploy
+  <<: *prd_branches
+  environment:
+    name: prd
+    url: https://yohu.co/
+  tags:
+   - base-project

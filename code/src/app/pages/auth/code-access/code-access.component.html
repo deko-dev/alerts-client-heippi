@@ -1,0 +1,56 @@
+<mat-card class="w-10/12 mx-auto px-20 pt-8 pb-14 mt-12 rounded-lg">
+    <mat-card-content>
+        <img src="assets/images/LogoYohu.co_blue.png" alt="" class="w-5/12 mb-10">
+
+
+        <h2 class="text-3xl text-color-accent font-semibold">Codigo de Acceso</h2>
+        
+        <div class="w-full flex flex-row justify-between items-center">
+            <input
+                id="firstDigit"
+                type="number"
+                minlength="1"
+                maxlength="1"
+                class="spin-button-none w-2/12 text-center h-16 text-gray-800 outline-none bg-white border-b-2 border-color-accent text-4xl focus:border-2"
+                [(ngModel)]="codeAccess[0]"
+                onkeyup="if (this.value.length == this.getAttribute('maxlength')) secondDigit.focus()"
+            />
+            <input
+                id="secondDigit"
+                type="number"
+                minlength="1"
+                maxlength="1"
+                class="spin-button-none w-2/12 text-center h-16 text-gray-800 outline-none bg-white border-b-2 border-color-accent text-4xl focus:border-2"
+                [(ngModel)]="codeAccess[1]"
+                onkeyup="if (this.value.length == this.getAttribute('maxlength')) thirdDigit.focus()"
+            />
+            <input
+                id="thirdDigit"
+                type="number"
+                minlength="1"
+                maxlength="1"
+                class="spin-button-none w-2/12 text-center h-16 text-gray-800 outline-none bg-white border-b-2 border-color-accent text-4xl focus:border-2"
+                [(ngModel)]="codeAccess[2]"
+                onkeyup="if (this.value.length == this.getAttribute('maxlength')) fourthDigit.focus()"
+            />
+            <input
+                id="fourthDigit"
+                type="number"
+                minlength="1"
+                maxlength="1"
+                class="spin-button-none w-2/12 text-center h-16 text-gray-800 outline-none bg-white border-b-2 border-color-accent text-4xl focus:border-2"
+                [(ngModel)]="codeAccess[3]"
+                onkeyup="if (this.value.length == this.getAttribute('maxlength')) buttonSend.focus()"
+            />
+        </div>
+        <button *ngIf="!isLoading" (click)="checkCodeAccess()" [disabled]="codeAccess.length > 4" id="buttonSend" mat-raised-button class="left-1/4 border-color-accent rounded-full w-7/12 border-1 mt-8 h-10 border-solid text-color-accent">
+            Ingresar
+        </button>
+
+        <a *ngIf="!isLoading" class="text-color-accent text-xs text-right font-semibold block mt-8 cursor-pointer" (click)="newCode()"> Solicitar nuevo codigo Aquí </a>
+
+        <mat-spinner class="mt-8 mx-auto" *ngIf="isLoading" [diameter]="50">
+        </mat-spinner>
+
+    </mat-card-content>
+</mat-card>
