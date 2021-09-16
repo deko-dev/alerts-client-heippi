@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RegisterCodeService } from './register-code.service';
 import { SwPush } from '@angular/service-worker';
-import { environment } from '../../../environments/environment.prd';
+import { environment } from '../../../environments/environment.prod';
 import { DashboardService } from '../main-users/dashboard.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
