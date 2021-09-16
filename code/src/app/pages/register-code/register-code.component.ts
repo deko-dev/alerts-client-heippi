@@ -127,11 +127,14 @@ export class RegisterCodeComponent implements OnInit {
   }
 
   subscribePushNotification() {
+    console.log('Lanzando modal');
+    this.isLoading = true;
     this.swPush.requestSubscription({ serverPublicKey: environment.vapidPublicKey })
       .then(
         (response) => {
           this.pushSubscription = response;
           this.isPermission = true;
+          this.isLoading = false;
         }
       ).catch( console.log );
   }
