@@ -11,6 +11,8 @@
 
     <span *ngIf="!isPermission" class="text-base text-red-600 font-medium">Debe aceptar las notificaciones</span>
 
+    <span>{{ isLoading }}</span>
+
     <div class="w-10/12 flex flex-col justify-between items-center gap-5 mt-32">
         <input 
             matInput 
